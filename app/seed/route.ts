@@ -4,8 +4,12 @@ import { invoices, customers, revenue, users } from "../lib/placeholder-data";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
-async function seedUsers() {
+// 单独创建扩展的函数
+async function createExtensions() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+}
+
+async function seedUsers() {
   await sql`
     CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -30,8 +34,6 @@ async function seedUsers() {
 }
 
 async function seedInvoices() {
-  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
   await sql`
     CREATE TABLE IF NOT EXISTS invoices (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -56,8 +58,6 @@ async function seedInvoices() {
 }
 
 async function seedCustomers() {
-  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
   await sql`
     CREATE TABLE IF NOT EXISTS customers (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -103,6 +103,10 @@ async function seedRevenue() {
 
 export async function GET() {
   try {
+    // 首先创建扩展，在事务外单独执行
+    await createExtensions();
+
+    // 然后在事务中执行所有seeding操作
     const result = await sql.begin((sql) => [
       seedUsers(),
       seedCustomers(),
