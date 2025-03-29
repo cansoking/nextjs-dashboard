@@ -15,10 +15,8 @@ export default async function Page({
     page?: string;
   };
 }) {
-  // searchParams是一个异步对象，所以需要await它
-  const params = await searchParams;
-  const query = params?.query || "";
-  const currentPage = Number(params?.page) || 1;
+  const query = searchParams?.query || "";
+  const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchInvoicesPages(query);
   return (
     <div className="w-full">
