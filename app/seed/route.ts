@@ -107,7 +107,7 @@ export async function GET() {
     await createExtensions();
 
     // 然后在事务中执行所有seeding操作
-    const result = await sql.begin((sql) => [
+    await sql.begin(() => [
       seedUsers(),
       seedCustomers(),
       seedInvoices(),
