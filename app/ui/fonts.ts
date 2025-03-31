@@ -1,7 +1,6 @@
-import { Inter } from "next/font/google";
-import { Lusitana } from "next/font/google";
-export const inter = Inter({ subsets: ["latin"] });
-export const lusitana = Lusitana({
+import { Roboto } from "next/font/google";
+// 引入Material UI的Roboto字体
+export const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["700", "400"],
+  weight: ["300", "400", "500", "700"],
 });

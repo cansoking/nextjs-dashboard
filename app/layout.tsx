@@ -1,7 +1,13 @@
 import "@/app/ui/global.css";
-import { inter } from "@/app/ui/fonts";
 
+import { roboto } from "@/app/ui/fonts";
 import { Metadata } from "next";
+
+// 集成MUI
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+
+import theme from "@/theme";
+import { ThemeProvider } from "@mui/material/styles";
 
 export const metadata: Metadata = {
   title: {
@@ -19,7 +25,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body>
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </AppRouterCacheProvider>
+      </body>
     </html>
   );
 }

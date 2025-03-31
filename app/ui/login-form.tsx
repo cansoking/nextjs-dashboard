@@ -1,6 +1,6 @@
 "use client";
 
-import { lusitana } from "@/app/ui/fonts";
+import { roboto } from "@/app/ui/fonts";
 import {
   AtSymbolIcon,
   ExclamationCircleIcon,
@@ -12,6 +12,7 @@ import { Button } from "./button";
 import { useActionState } from "react";
 import { authenticate } from "../lib/actions";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -20,7 +21,7 @@ export default function LoginForm() {
   return (
     <form className="space-y-3" action={formAction}>
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className={`${lusitana.className} mb-3 text-2xl`}>
+        <h1 className={`${roboto.className} mb-3 text-2xl`}>
           Please log in to continue.
         </h1>
         <div className="w-full">
@@ -68,6 +69,11 @@ export default function LoginForm() {
         <Button className="mt-4 w-full">
           Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
         </Button>
+        <Link href={`/register?callBackUrl=${callbackUrl}`}>
+          <Button className="mt-4 w-full bg-blue-800 hover:bg-blue-700">
+            Sign up <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+          </Button>
+        </Link>
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"

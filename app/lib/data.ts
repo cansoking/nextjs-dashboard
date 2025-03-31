@@ -8,8 +8,35 @@ import {
   Revenue,
 } from "./definitions";
 import { formatCurrency } from "./utils";
+import type { User } from "./definitions";
+import bcrypt from "bcryptjs";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+
+export async function addUser(user: User): Promise<User | undefined> {
+  const hashedPassword = await bcrypt.hash(user.password, 10);
+  try {
+    const backUser = await sql<User[]>`
+    INSERT INTO users (id, name, email, password)
+    VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
+    ON CONFLICT (id) DO NOTHING;
+  `;
+    return getUser(user.email);
+  } catch (error) {
+    console.error("Failed to add user:", error);
+    throw new Error("Failed to add user.");
+  }
+}
+
+export async function getUser(email: string): Promise<User | undefined> {
+  try {
+    const user = await sql<User[]>`SELECT * FROM users WHERE email = ${email}`;
+    return user[0];
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user.");
+  }
+}
 
 export async function fetchRevenue() {
   try {
@@ -93,7 +120,7 @@ export async function fetchCardData() {
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
   query: string,
-  currentPage: number
+  currentPage: number,
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
